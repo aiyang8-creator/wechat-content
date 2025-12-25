@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WeChat Automator Pro - 公众号自动化工厂</title>
     
-    <!-- Core Libraries (Switched to cdnjs for better stability) -->
+    <!-- Core Libraries -->
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-    <!-- Tailwind Config for Custom Colors (Safe Loading Version) -->
+    <!-- Tailwind Config -->
     <script>
         (function() {
-            // 定义配置对象
             const myConfig = {
                 theme: {
                     extend: {
@@ -32,40 +31,31 @@
                     }
                 }
             };
-
-            // 尝试应用配置的安全函数
             function applyTailwindConfig() {
                 if (typeof tailwind !== 'undefined') {
                     tailwind.config = myConfig;
                 }
             }
-
-            // 1. 立即尝试
             if (typeof tailwind !== 'undefined') {
                 applyTailwindConfig();
             } else {
-                // 2. 如果未加载，监听 load 事件
                 window.addEventListener('load', applyTailwindConfig);
-                
-                // 3. 双重保险：设置定时器轮询检测 (针对某些特殊异步环境)
                 const checkInterval = setInterval(() => {
                     if (typeof tailwind !== 'undefined') {
                         applyTailwindConfig();
                         clearInterval(checkInterval);
                     }
                 }, 100);
-                
-                // 5秒后停止轮询以防死循环
                 setTimeout(() => clearInterval(checkInterval), 5000);
             }
         })();
     </script>
 
-    <!-- Custom Styles & Variables -->
+    <!-- Custom Styles -->
     <style>
         :root {
             /* Default Theme (Classic White) */
-            --w-accent-color: #07c160; /* WeChat Green */
+            --w-accent-color: #07c160; 
             --w-bg-color: #f3f4f6;
             --w-surface-color: #ffffff;
             --w-text-color: #1f2937;
@@ -73,35 +63,9 @@
             --w-border-color: #e5e7eb;
         }
 
-        /* Tech Blue Theme */
-        [data-theme="tech"] {
-            --w-accent-color: #3b82f6;
-            --w-bg-color: #0f172a;
-            --w-surface-color: #1e293b;
-            --w-text-color: #f1f5f9;
-            --w-text-sec-color: #94a3b8;
-            --w-border-color: #334155;
-        }
-
-        /* Warm/Eye-care Theme */
-        [data-theme="warm"] {
-            --w-accent-color: #d97706;
-            --w-bg-color: #fef3c7;
-            --w-surface-color: #fffbeb;
-            --w-text-color: #451a03;
-            --w-text-sec-color: #92400e;
-            --w-border-color: #fde68a;
-        }
-
-        /* Dark Mode */
-        [data-theme="dark"] {
-            --w-accent-color: #8b5cf6;
-            --w-bg-color: #18181b;
-            --w-surface-color: #27272a;
-            --w-text-color: #e4e4e7;
-            --w-text-sec-color: #a1a1aa;
-            --w-border-color: #3f3f46;
-        }
+        [data-theme="tech"] { --w-accent-color: #3b82f6; --w-bg-color: #0f172a; --w-surface-color: #1e293b; --w-text-color: #f1f5f9; --w-text-sec-color: #94a3b8; --w-border-color: #334155; }
+        [data-theme="warm"] { --w-accent-color: #d97706; --w-bg-color: #fef3c7; --w-surface-color: #fffbeb; --w-text-color: #451a03; --w-text-sec-color: #92400e; --w-border-color: #fde68a; }
+        [data-theme="dark"] { --w-accent-color: #8b5cf6; --w-bg-color: #18181b; --w-surface-color: #27272a; --w-text-color: #e4e4e7; --w-text-sec-color: #a1a1aa; --w-border-color: #3f3f46; }
 
         body {
             background-color: var(--w-bg-color);
@@ -110,91 +74,36 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Scrollbar Styling for Console */
-        .console-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .console-scroll::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
-        }
-        .console-scroll::-webkit-scrollbar-thumb {
-            background: var(--w-accent-color);
-            border-radius: 3px;
-        }
+        .console-scroll::-webkit-scrollbar { width: 6px; }
+        .console-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        .console-scroll::-webkit-scrollbar-thumb { background: var(--w-accent-color); border-radius: 3px; }
 
-        /* WeChat Preview Content Styles (Crucial for Copy) */
-        .wx-content {
-            font-size: 16px;
-            line-height: 1.75;
-            letter-spacing: 0.05em;
-            text-align: justify;
-            color: #333333;
-        }
-        .wx-content p {
-            margin-bottom: 1.5em;
-            min-height: 1em;
-        }
-        .wx-content h2 {
-            font-size: 18px;
-            font-weight: bold;
-            border-left: 4px solid var(--w-accent-color);
-            padding-left: 10px;
-            margin-top: 2em;
-            margin-bottom: 1em;
-            line-height: 1.4;
-            color: #000;
-        }
-        .wx-content blockquote {
-            background: #f7f7f7;
-            border-radius: 4px;
-            padding: 1em;
-            margin: 1.5em 0;
-            color: #666;
-            font-size: 14px;
-            border-left: 3px solid #ddd;
-        }
-        .wx-content strong {
-            color: var(--w-accent-color);
-            font-weight: 700;
-        }
-        .wx-content ul {
-            padding-left: 1em;
-            margin-bottom: 1.5em;
-        }
-        .wx-content li {
-            list-style-type: disc;
-            margin-bottom: 0.5em;
-            color: #444;
-        }
-        /* Hide scrollbar for preview */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .wx-content { font-size: 16px; line-height: 1.75; letter-spacing: 0.05em; text-align: justify; color: #333333; }
+        .wx-content p { margin-bottom: 1.5em; min-height: 1em; }
+        .wx-content h2 { font-size: 18px; font-weight: bold; border-left: 4px solid var(--w-accent-color); padding-left: 10px; margin-top: 2em; margin-bottom: 1em; line-height: 1.4; color: #000; }
+        .wx-content blockquote { background: #f7f7f7; border-radius: 4px; padding: 1em; margin: 1.5em 0; color: #666; font-size: 14px; border-left: 3px solid #ddd; }
+        .wx-content strong { color: var(--w-accent-color); font-weight: 700; }
+        .wx-content ul { padding-left: 1em; margin-bottom: 1.5em; }
+        .wx-content li { list-style-type: disc; margin-bottom: 0.5em; color: #444; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        // --- 1. Constants & Configuration ---
-        // 默认Key置空，强制用户输入，并支持本地缓存
-        const DEFAULT_API_KEY = "";
+        // --- 1. Constants ---
+        const DEFAULT_API_KEY = ""; 
         const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
         
         // --- 2. Utilities ---
-
-        // Robust Fetch with Retry
         const fetchWithRetry = async (url, options = {}, logCallback, maxRetries = 5) => {
             let attempt = 0;
             while (attempt < maxRetries) {
                 try {
                     const response = await fetch(url, options);
-                    
-                    // Handle 429 (Rate Limit) - Soft Error
                     if (response.status === 429) {
                         const waitTime = (attempt + 1) * 5000;
                         logCallback(`⚠️ 触发限流 (429)，等待 ${waitTime/1000}秒后第 ${attempt + 1} 次重试...`);
@@ -202,8 +111,6 @@
                         attempt++;
                         continue;
                     }
-
-                    // Handle 502/503 (Server Error) - Soft Error
                     if (response.status >= 500) {
                         const waitTime = Math.pow(2, attempt) * 1000;
                         logCallback(`⚠️ 服务器繁忙 (${response.status})，等待 ${waitTime/1000}秒后第 ${attempt + 1} 次重试...`);
@@ -211,17 +118,13 @@
                         attempt++;
                         continue;
                     }
-
-                    // Handle 400/401 (Client Error) - Hard Error
                     if (response.status >= 400 && response.status < 500) {
                         const errText = await response.text();
                         throw new Error(`请求被拒绝 (${response.status}): ${errText}`);
                     }
-
                     return response;
                 } catch (error) {
                     if (attempt === maxRetries - 1) throw error;
-                    // Network errors (offline, etc)
                     const waitTime = Math.pow(2, attempt) * 1000;
                     logCallback(`⚠️ 网络错误 (${error.message})，${waitTime/1000}秒后重试...`);
                     await new Promise(r => setTimeout(r, waitTime));
@@ -230,7 +133,7 @@
             }
         };
 
-        // --- 3. Icons (Lucide Style) ---
+        // --- 3. Icons ---
         const Icons = {
             Settings: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>,
             Play: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>,
@@ -239,7 +142,8 @@
             Check: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
             Theme: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>,
             Key: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>,
-            Cloud: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.5 19c0-1.7-1.3-3-3-3h-11a3 3 0 0 1-3-3c0-1.7 1.3-3 3-3 0-1.4 0-2.8.3-4.1A6 6 0 0 1 12 5c2.9 0 5.4 2 6 4.9 2.5.3 4.5 2.5 4.5 5.1 0 2.8-2.2 5-5 5z"/></svg>
+            Cloud: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.5 19c0-1.7-1.3-3-3-3h-11a3 3 0 0 1-3-3c0-1.7 1.3-3 3-3 0-1.4 0-2.8.3-4.1A6 6 0 0 1 12 5c2.9 0 5.4 2 6 4.9 2.5.3 4.5 2.5 4.5 5.1 0 2.8-2.2 5-5 5z"/></svg>,
+            Refresh: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
         };
 
         // --- 4. Main Components ---
@@ -255,37 +159,26 @@
         };
 
         const App = () => {
-            // 从 LocalStorage 加载 API Key，如果没有则为空
             const [apiKey, setApiKey] = React.useState(() => localStorage.getItem('wechat_automator_api_key') || "");
-            // 如果没有 API Key，默认展开设置面板
             const [showCustomKey, setShowCustomKey] = React.useState(() => !localStorage.getItem('wechat_automator_api_key'));
             const [topic, setTopic] = React.useState("");
             const [logs, setLogs] = React.useState([]);
             const [loading, setLoading] = React.useState(false);
-            const [article, setArticle] = React.useState(null); // { title, coverUrl, sections: [] }
+            const [article, setArticle] = React.useState(null); 
+            // article: { titles: [], digest: '', sections: [], coverUrl, coverPrompt }
+            const [currentTitleIndex, setCurrentTitleIndex] = React.useState(0);
+            
             const [theme, setTheme] = React.useState('classic');
             const [toast, setToast] = React.useState({ show: false, msg: '' });
 
             const logsEndRef = React.useRef(null);
             const previewRef = React.useRef(null);
 
-            // Auto-scroll logs
+            React.useEffect(() => { logsEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [logs]);
+            React.useEffect(() => { document.body.setAttribute('data-theme', theme); }, [theme]);
             React.useEffect(() => {
-                logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, [logs]);
-
-            // Theme Effect
-            React.useEffect(() => {
-                document.body.setAttribute('data-theme', theme);
-            }, [theme]);
-
-            // Save API Key to LocalStorage whenever it changes
-            React.useEffect(() => {
-                if (apiKey) {
-                    localStorage.setItem('wechat_automator_api_key', apiKey);
-                } else {
-                    localStorage.removeItem('wechat_automator_api_key');
-                }
+                if (apiKey) localStorage.setItem('wechat_automator_api_key', apiKey);
+                else localStorage.removeItem('wechat_automator_api_key');
             }, [apiKey]);
 
             const addLog = (msg) => {
@@ -298,18 +191,32 @@
                 setTimeout(() => setToast({ show: false, msg: '' }), 3000);
             };
 
-            // Image Generator (Flux via Pollinations)
+            const cycleTitle = () => {
+                if (article && article.titles.length > 0) {
+                    setCurrentTitleIndex((prev) => (prev + 1) % article.titles.length);
+                }
+            };
+
+            const copyDigest = async () => {
+                if (article && article.digest) {
+                    try {
+                        await navigator.clipboard.writeText(article.digest);
+                        showToast("摘要已复制");
+                    } catch (e) {
+                        showToast("复制失败");
+                    }
+                }
+            };
+
+            // Image Generator
             const generateImage = async (prompt, isCover = false) => {
-                // Enhance prompt
                 const enhancedPrompt = `${prompt}, high quality, 8k, realistic, detailed, photorealistic`;
                 const seed = Math.floor(Math.random() * 1000000);
                 const width = isCover ? 1080 : 1280;
-                const height = isCover ? 460 : 720; // Cover 2.35:1, others 16:9
+                const height = isCover ? 460 : 720; 
                 const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}?width=${width}&height=${height}&seed=${seed}&nologo=true&model=flux`;
 
                 addLog(`🎨 开始绘制${isCover ? '封面' : '插图'}: ${prompt.substring(0, 15)}...`);
-
-                // We verify the image works by fetching the blob
                 try {
                     const res = await fetchWithRetry(url, {}, addLog);
                     if (!res.ok) throw new Error("Image fetch failed");
@@ -319,57 +226,49 @@
                     return objectUrl;
                 } catch (e) {
                     addLog(`❌ 绘图失败，使用占位图: ${e.message}`);
-                    // Fallback generic SVG
                     return `data:image/svg+xml;charset=UTF-8,%3Csvg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="100%25" height="100%25" fill="%23eee"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%23aaa"%3EImage Generation Failed%3C/text%3E%3C/svg%3E`;
                 }
             };
 
             const handleStart = async () => {
                 if (!topic) return showToast("请输入选题");
-                // 仅使用用户输入的 Key
                 const currentKey = apiKey;
                 if (!currentKey) {
-                    setShowCustomKey(true); // 自动展开设置
+                    setShowCustomKey(true);
                     return showToast("请先配置 API Key");
                 }
                 
                 setLoading(true);
                 setLogs([]);
                 setArticle(null);
+                setCurrentTitleIndex(0);
                 addLog("🚀 任务启动...");
 
                 try {
-                    // 1. Text Generation
-                    addLog("🧠 Gemini 正在构思大纲与正文...");
+                    addLog("🧠 Gemini 正在构思...");
                     
                     const systemPrompt = `
-                    你是一个擅长讲故事、文笔极佳的微信公众号主理人。请根据用户提供的【Topic】创作一篇高质量图文。
+                    你是一个擅长讲故事的微信公众号主理人。请根据用户提供的【Topic】创作一篇高质量图文。
 
                     【风格基调】：
-                    1. **老友聊天风**：语气要非常轻松、舒适，就像和好朋友在咖啡馆或深夜聊天一样。不要端着架子，不要像写论文或教科书。用词要口语化、接地气。
-                    2. **故事为主**：全篇必须由生动的**真实故事**、**生活细节**或**具体场景**串联。不要一上来就讲大道理，要用故事让读者自己感悟。
-                    3. **少讲道理**：道理只占20%，故事和情感占80%。道理要点到为止，金句要温和而有穿透力，拒绝爹味说教。
-                    4. **情感共鸣**：关注读者的情绪，多用“你”、“我们”，拉近距离。
+                    1. **老友聊天风**：语气轻松、舒适，像朋友在咖啡馆聊天。
+                    2. **故事为主**：80% 真实故事/细节，20% 道理。拒绝爹味说教。
+                    3. **情感共鸣**：多用“我们”，关注读者情绪。
 
-                    【核心指令】：
-                    1. **一致性铁律**：如果标题包含数字（如“3个习惯”），正文的故事和观点数量必须严格对应。
-                    2. 标题必须**吸引人**，可以走温情、扎心、治愈或反直觉路线，避免过于夸张的震惊体。
+                    【关键要求】：
+                    1. **一致性**：如果标题含数字（如“3个习惯”），正文结构必须严格对应。
+                    2. **摘要必填**：必须生成一个120字以内的 digest，用于公众号摘要，要吸引人点击。
+                    3. **多标题**：必须提供5个不同角度的爆款标题供选择。
                     
-                    【排版格式（最高优先级）】：
-                    1. 返回严格的 JSON 格式。
-                    2. **严禁 Markdown**：绝对不要使用星号 \`**\` 来加粗，也别用 \`##\` 做标题。
-                    3. **必须使用 HTML**：
-                       - 加粗使用 <strong>...</strong>
-                       - 二级标题使用 <h2>...</h2>
-                       - 引用金句使用 <blockquote>...</blockquote>
-                       - 列表使用 <ul><li>...</li></ul>
+                    【JSON格式】：
+                    返回纯 JSON，包含：
+                    - 'digest': string (120字以内摘要)
+                    - 'titles': string[] (5个爆款标题数组)
+                    - 'coverPrompt': string (英文封面提示词)
+                    - 'sections': Array<{ type: 'text'|'image_prompt', content: string }>
                     
-                    【结构要求】：
-                    1. 包含 'topic', 'titles' (5个精选标题数组), 'coverPrompt' (英文封面提示词), 'sections' (内容数组)。
-                    2. sections 数组元素结构: { "type": "text" | "image_prompt", "content": "string" }。
-                    3. 文本长度 1500-2000 字。
-                    4. 图片提示词 (image_prompt) 需根据上下文穿插在文本中，用于后续AI生图。
-                    5. 输出必须是纯 JSON，不要有 \`\`\`json 标记。
+                    【排版】：
+                    使用 HTML 标签：<strong>, <h2>, <blockquote>, <ul><li>。严禁 Markdown。
                     `;
 
                     const response = await fetchWithRetry(
@@ -390,17 +289,13 @@
                     const resultText = data.candidates[0].content.parts[0].text;
                     let parsedData = JSON.parse(resultText);
 
-                    // --- 新增：数据清洗与容错处理 ---
-                    // 防止 AI 偶尔不听话输出了 Markdown 符号，前端强制替换为 HTML
+                    // Data Cleaning
                     if (parsedData.sections) {
                         parsedData.sections = parsedData.sections.map(section => {
                             if (section.type === 'text') {
                                 let cleanContent = section.content;
-                                // 替换Markdown加粗 **text** -> <strong>text</strong>
                                 cleanContent = cleanContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                                // 替换Markdown标题 ## text -> <h2>text</h2>
                                 cleanContent = cleanContent.replace(/^##\s+(.*$)/gm, '<h2>$1</h2>');
-                                // 替换Markdown列表 * text -> <li>text</li> (简单处理)
                                 cleanContent = cleanContent.replace(/^\*\s+(.*$)/gm, '<ul><li>$1</li></ul>');
                                 return { ...section, content: cleanContent };
                             }
@@ -408,9 +303,8 @@
                         });
                     }
 
-                    addLog("📝 文案生成完毕，准备渲染...");
+                    addLog("📝 大纲已生成，准备渲染...");
                     
-                    // Initial State Setup with placeholders
                     const initialSections = parsedData.sections.map((s, i) => ({
                         ...s,
                         id: i,
@@ -419,26 +313,22 @@
                     }));
 
                     setArticle({
-                        title: parsedData.titles[0],
-                        coverUrl: null, // Loading
+                        titles: parsedData.titles || ["默认标题"],
+                        digest: parsedData.digest || "暂无摘要",
+                        coverUrl: null,
                         coverPrompt: parsedData.coverPrompt,
                         sections: initialSections
                     });
 
-                    // 2. Image Generation Pipeline (Sequential)
-                    
-                    // Cover
+                    // Sequential Image Gen
                     const coverUrl = await generateImage(parsedData.coverPrompt, true);
                     setArticle(prev => ({ ...prev, coverUrl }));
                     
-                    // Body Images
                     for (let i = 0; i < initialSections.length; i++) {
                         const section = initialSections[i];
                         if (section.type === 'image_prompt') {
-                            // Delay to prevent browser/api choke
                             await new Promise(r => setTimeout(r, 1000));
                             const imgUrl = await generateImage(section.content, false);
-                            
                             setArticle(prev => ({
                                 ...prev,
                                 sections: prev.sections.map(s => s.id === section.id ? { ...s, url: imgUrl, isLoading: false } : s)
@@ -458,20 +348,15 @@
 
             const copyToWeChat = async () => {
                 if (!previewRef.current) return;
+                addLog("📋 正在处理富文本...");
+                showToast("正在准备图片...");
                 
-                addLog("📋 正在格式化富文本 (包含图片转码)...");
-                showToast("正在准备图片，请稍候...");
-                
-                // 1. 创建 DOM 克隆以进行样式内联处理
                 const clone = previewRef.current.cloneNode(true);
-                
-                // --- 关键步骤：将图片 URL 转换为 Base64 ---
-                // 微信编辑器直接粘贴外部链接图片往往会失败，
-                // 转为 Base64 内嵌到 HTML 中是解决"图片无法粘贴"最有效的方法。
                 const images = clone.querySelectorAll('img');
+                
+                // Base64 Conversion
                 for (let img of images) {
                     try {
-                        addLog(`🔄 正在转码图片: ${img.src.substring(0, 20)}...`);
                         const response = await fetch(img.src);
                         const blob = await response.blob();
                         const base64 = await new Promise((resolve) => {
@@ -481,23 +366,17 @@
                         });
                         img.src = base64;
                     } catch (e) {
-                        console.warn('Image base64 conversion failed', e);
-                        addLog(`⚠️ 图片转码失败，可能无法粘贴: ${e.message}`);
+                        console.warn('Image conversion failed', e);
                     }
                 }
 
-                // 2. 移除所有不必要的 class，并显式应用内联样式
+                // Inline Styles
                 const processStyles = (root) => {
                     const allElements = root.querySelectorAll('*');
                     const brandColor = '#07c160';
-                    
                     allElements.forEach(el => {
                         const tagName = el.tagName.toLowerCase();
-                        
-                        // 全局重置
                         el.removeAttribute('class');
-                        
-                        // 样式注入
                         if (tagName === 'p') {
                             el.style.marginBottom = '1.5em';
                             el.style.lineHeight = '1.75';
@@ -528,25 +407,17 @@
                             el.style.color = brandColor;
                             el.style.fontWeight = '700';
                         }
-                        if (tagName === 'ul') {
-                            el.style.paddingLeft = '20px';
-                            el.style.margin = '1em 0';
-                        }
-                        if (tagName === 'li') {
-                            el.style.marginBottom = '0.5em';
-                            el.style.listStyleType = 'disc';
-                        }
+                        if (tagName === 'ul') { el.style.paddingLeft = '20px'; el.style.margin = '1em 0'; }
+                        if (tagName === 'li') { el.style.marginBottom = '0.5em'; el.style.listStyleType = 'disc'; }
                         if (tagName === 'img') {
                             el.style.maxWidth = '100%';
                             el.style.height = 'auto';
                             el.style.display = 'block';
                             el.style.margin = '10px auto';
                             el.style.borderRadius = '6px';
-                            // 微信特殊处理
                             el.setAttribute('data-src', el.src); 
                         }
                     });
-                    
                     root.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif";
                     root.style.fontSize = '16px';
                     root.style.lineHeight = '1.75';
@@ -554,23 +425,17 @@
                 };
                 
                 processStyles(clone);
-                
                 const htmlContent = clone.outerHTML;
 
                 try {
                     const blobHtml = new Blob([htmlContent], { type: "text/html" });
                     const blobText = new Blob([clone.innerText], { type: "text/plain" });
-                    
-                    const data = [new ClipboardItem({ 
-                        "text/html": blobHtml, 
-                        "text/plain": blobText 
-                    })];
-
+                    const data = [new ClipboardItem({ "text/html": blobHtml, "text/plain": blobText })];
                     await navigator.clipboard.write(data);
-                    showToast("深度格式化(含图片)复制成功！");
-                    addLog("✅ 富文本(含图片Base64)已复制");
+                    showToast("复制成功！");
+                    addLog("✅ 富文本已复制");
                 } catch (err) {
-                    addLog(`⚠️ API 复制受限，尝试兼容模式...`);
+                    addLog(`⚠️ 尝试兼容模式...`);
                     try {
                         const tempDiv = document.createElement('div');
                         tempDiv.innerHTML = htmlContent;
@@ -578,40 +443,53 @@
                         tempDiv.style.left = '-9999px';
                         tempDiv.style.backgroundColor = 'white';
                         document.body.appendChild(tempDiv);
-
                         const range = document.createRange();
                         range.selectNodeContents(tempDiv);
                         const selection = window.getSelection();
                         selection.removeAllRanges();
                         selection.addRange(range);
-
-                        const successful = document.execCommand('copy');
-                        
+                        document.execCommand('copy');
                         document.body.removeChild(tempDiv);
                         selection.removeAllRanges();
-
-                        if (successful) {
-                            showToast("已复制 (兼容模式)");
-                            addLog("✅ 兼容模式复制成功");
-                        } else {
-                            throw new Error("浏览器拒绝复制");
-                        }
-                    } catch (fallbackErr) {
-                        addLog(`❌ 复制失败: ${fallbackErr.message}`);
-                        showToast("复制失败，请手动截图");
+                        showToast("已复制 (兼容模式)");
+                    } catch (e) {
+                        showToast("复制失败");
                     }
                 }
             };
 
+            // Fixed: Clone Node method for complete full-page screenshot
             const exportLongImage = async () => {
                 if (!previewRef.current) return;
-                addLog("🖼️ 正在生成长图...");
+                addLog("🖼️ 正在生成全量长图...");
+                
                 try {
-                    const canvas = await html2canvas(previewRef.current, {
+                    const element = previewRef.current;
+                    const clone = element.cloneNode(true);
+                    
+                    // Force clone to full height and visible
+                    clone.style.position = 'fixed';
+                    clone.style.left = '-9999px';
+                    clone.style.top = '0';
+                    clone.style.width = `${element.offsetWidth}px`;
+                    clone.style.height = 'auto';
+                    clone.style.overflow = 'visible';
+                    clone.style.zIndex = '-1000';
+                    
+                    document.body.appendChild(clone);
+                    
+                    // Wait for render
+                    await new Promise(r => setTimeout(r, 500));
+
+                    const canvas = await html2canvas(clone, {
                         useCORS: true,
-                        scale: 2, // High res
-                        backgroundColor: '#ffffff'
+                        scale: 2,
+                        backgroundColor: '#ffffff',
+                        height: clone.scrollHeight, // Capture full height
+                        windowHeight: clone.scrollHeight
                     });
+                    
+                    document.body.removeChild(clone);
                     
                     const link = document.createElement('a');
                     link.download = `wechat-export-${Date.now()}.png`;
@@ -627,8 +505,8 @@
                 <div className="flex h-screen w-full overflow-hidden">
                     <Toast message={toast.msg} show={toast.show} />
 
-                    {/* Left Panel: Console */}
-                    <div className="w-[40%] h-full bg-surface border-r border-[var(--w-border-color)] flex flex-col p-6 shadow-xl z-10">
+                    {/* Left Panel */}
+                    <div className="w-[40%] h-full bg-surface border-r border-[var(--w-border-color)] flex flex-col p-6 shadow-xl z-10 overflow-y-auto">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold text-brand flex items-center gap-2">
                                 <Icons.Settings /> 自动化工厂
@@ -640,122 +518,103 @@
                                         onClick={() => setTheme(t)}
                                         className={`w-6 h-6 rounded-full border border-gray-300 ${theme === t ? 'ring-2 ring-brand' : ''}`}
                                         style={{ backgroundColor: t === 'dark' ? '#333' : t === 'tech' ? '#eff6ff' : t === 'warm' ? '#fffbeb' : '#fff' }}
-                                        title={`切换主题: ${t}`}
                                     />
                                 ))}
                             </div>
                         </div>
 
-                        {/* Input Area */}
                         <div className="space-y-4 mb-6">
-                            {/* Refactored API Key UI */}
                             <div className="bg-bg rounded-lg p-3 border border-[var(--w-border-color)]">
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2 text-sm">
                                         <div className={`w-2 h-2 rounded-full ${apiKey ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                        <span className="font-semibold text-text">
-                                            {apiKey ? 'API Key 已就绪' : '未配置 API Key'}
-                                        </span>
-                                        <Icons.Cloud />
+                                        <span className="font-semibold text-text">{apiKey ? 'API 已就绪' : '未配置 API'}</span>
                                     </div>
-                                    <button 
-                                        onClick={() => setShowCustomKey(!showCustomKey)}
-                                        className="text-xs text-brand hover:underline font-medium"
-                                    >
-                                        {showCustomKey ? '收起设置' : '设置 Key'}
-                                    </button>
+                                    <button onClick={() => setShowCustomKey(!showCustomKey)} className="text-xs text-brand hover:underline">{showCustomKey ? '收起' : '设置'}</button>
                                 </div>
-                                
                                 {showCustomKey && (
-                                    <div className="mt-3 animate-fade-in">
-                                        <input 
-                                            type="password" 
-                                            value={apiKey}
-                                            onChange={(e) => setApiKey(e.target.value)}
-                                            className="w-full p-2 rounded bg-white border border-gray-300 text-xs font-mono focus:ring-1 focus:ring-brand outline-none"
-                                            placeholder="输入您的 Gemini API Key"
-                                        />
-                                        <p className="text-[10px] text-gray-400 mt-1">Key 将自动保存在本地浏览器缓存中</p>
-                                    </div>
+                                    <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} className="w-full mt-2 p-2 rounded bg-white border text-xs outline-none" placeholder="输入 Gemini API Key" />
                                 )}
                             </div>
 
                             <div>
-                                <label className="text-xs font-semibold text-text-sec uppercase tracking-wider">核心选题</label>
-                                <textarea 
-                                    value={topic}
-                                    onChange={(e) => setTopic(e.target.value)}
-                                    className="w-full mt-1 p-3 rounded-lg bg-bg border border-[var(--w-border-color)] text-text focus:ring-2 focus:ring-brand outline-none transition-all resize-none h-24"
-                                    placeholder="例如：2024年AI行业发展趋势分析，风格要犀利..."
-                                />
+                                <label className="text-xs font-semibold text-text-sec uppercase">核心选题</label>
+                                <textarea value={topic} onChange={(e) => setTopic(e.target.value)} className="w-full mt-1 p-3 rounded-lg bg-bg border border-[var(--w-border-color)] text-text outline-none h-24" placeholder="例如：2024年AI行业发展趋势..." />
                             </div>
-                            <button 
-                                onClick={handleStart}
-                                disabled={loading}
-                                className={`w-full py-3 rounded-lg font-bold text-white flex justify-center items-center gap-2 transition-all transform active:scale-95 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-brand hover:brightness-110 shadow-lg'}`}
-                            >
+                            
+                            <button onClick={handleStart} disabled={loading} className={`w-full py-3 rounded-lg font-bold text-white flex justify-center items-center gap-2 ${loading ? 'bg-gray-400' : 'bg-brand'}`}>
                                 {loading ? <span className="animate-spin">⌛</span> : <Icons.Play />}
                                 {loading ? "正在生产中..." : "开始生产"}
                             </button>
                         </div>
 
-                        {/* System Logs */}
-                        <div className="flex-1 bg-[#1e1e1e] rounded-xl p-4 overflow-hidden flex flex-col font-mono text-xs shadow-inner">
-                            <div className="flex items-center justify-between text-gray-400 border-b border-gray-700 pb-2 mb-2">
-                                <span>SYSTEM_LOG</span>
-                                <div className="flex gap-1">
-                                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        {/* Article Meta Info Area */}
+                        {article && (
+                            <div className="mb-6 space-y-4 animate-fade-in">
+                                <div className="bg-bg p-3 rounded-lg border border-[var(--w-border-color)]">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-xs font-bold text-text-sec uppercase">备选标题 (点击应用)</span>
+                                    </div>
+                                    <div className="space-y-1">
+                                        {article.titles.map((t, idx) => (
+                                            <div 
+                                                key={idx} 
+                                                onClick={() => setCurrentTitleIndex(idx)}
+                                                className={`text-sm p-2 rounded cursor-pointer transition-colors ${currentTitleIndex === idx ? 'bg-brand text-white' : 'hover:bg-gray-200 text-text'}`}
+                                            >
+                                                {t}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="bg-bg p-3 rounded-lg border border-[var(--w-border-color)]">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-xs font-bold text-text-sec uppercase">摘要 (Digest)</span>
+                                        <button onClick={copyDigest} className="text-xs text-brand hover:underline">复制摘要</button>
+                                    </div>
+                                    <p className="text-sm text-text leading-relaxed">{article.digest}</p>
                                 </div>
                             </div>
+                        )}
+
+                        <div className="flex-1 bg-[#1e1e1e] rounded-xl p-4 overflow-hidden flex flex-col font-mono text-xs shadow-inner min-h-[150px]">
+                            <div className="text-gray-400 border-b border-gray-700 pb-2 mb-2">SYSTEM_LOG</div>
                             <div className="flex-1 overflow-y-auto console-scroll space-y-1">
-                                {logs.length === 0 && <span className="text-gray-600">等待任务指令...</span>}
-                                {logs.map((log, i) => (
-                                    <div key={i} className={`${log.includes('❌') ? 'text-red-400' : log.includes('⚠️') ? 'text-yellow-400' : 'text-green-400'}`}>
-                                        {log}
-                                    </div>
-                                ))}
+                                {logs.map((log, i) => <div key={i} className={log.includes('❌') ? 'text-red-400' : 'text-green-400'}>{log}</div>)}
                                 <div ref={logsEndRef} />
                             </div>
                         </div>
                     </div>
 
-                    {/* Right Panel: Preview */}
+                    {/* Right Panel */}
                     <div className="w-[60%] h-full bg-bg relative flex flex-col items-center justify-center p-8">
-                        
-                        {/* Mobile Device Mockup */}
-                        <div className="w-[375px] h-[812px] bg-white rounded-[40px] shadow-ios border-[8px] border-gray-800 relative overflow-hidden flex flex-col transform transition-transform duration-500 hover:scale-105">
-                            {/* Notch */}
-                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[150px] h-[24px] bg-gray-800 rounded-b-[20px] z-20"></div>
-                            
-                            {/* Status Bar Mock */}
+                        <div className="w-[375px] h-[812px] bg-white rounded-[40px] shadow-ios border-[8px] border-gray-800 relative overflow-hidden flex flex-col">
+                            {/* Status Bar */}
                             <div className="h-10 w-full bg-white flex justify-between items-end px-6 pb-2 text-[10px] font-bold text-black z-10 select-none">
-                                <span>9:41</span>
-                                <div className="flex gap-1">
-                                    <span>📶</span><span>🔋</span>
-                                </div>
+                                <span>9:41</span><div className="flex gap-1"><span>📶</span><span>🔋</span></div>
                             </div>
 
-                            {/* Content Area */}
+                            {/* Content */}
                             <div className="flex-1 overflow-y-auto no-scrollbar bg-white" ref={previewRef}>
                                 {article ? (
                                     <>
-                                        {/* Cover Image */}
                                         <div className="w-full aspect-[2.35/1] bg-gray-200 relative overflow-hidden group">
                                             {article.coverUrl ? (
-                                                <img src={article.coverUrl} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Cover" crossOrigin="anonymous" />
+                                                <img src={article.coverUrl} className="w-full h-full object-cover" alt="Cover" crossOrigin="anonymous" />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-400 animate-pulse bg-gray-100">
-                                                    <span className="text-xs">封面绘制中...</span>
-                                                </div>
+                                                <div className="w-full h-full flex items-center justify-center text-gray-400 animate-pulse bg-gray-100"><span className="text-xs">封面绘制中...</span></div>
                                             )}
                                             <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
-                                                <h1 className="text-lg font-bold leading-tight line-clamp-2">{article.title}</h1>
+                                                <div className="flex items-start gap-2">
+                                                    <h1 className="text-lg font-bold leading-tight line-clamp-2 flex-1">{article.titles[currentTitleIndex]}</h1>
+                                                    <button onClick={cycleTitle} className="mt-1 p-1 bg-white/20 rounded-full hover:bg-white/40 transition-colors" title="切换标题">
+                                                        <Icons.Refresh />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Main Content */}
                                         <div className="p-5 wx-content pb-20">
                                             {article.sections.map((section, idx) => {
                                                 if (section.type === 'text') {
@@ -768,55 +627,32 @@
                                                             ) : (
                                                                 <div className="w-full aspect-video bg-gray-50 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 animate-pulse">
                                                                     <div className="w-8 h-8 border-4 border-brand border-t-transparent rounded-full animate-spin mb-2"></div>
-                                                                    <span className="text-xs text-gray-400">正在绘制插图 {idx}...</span>
                                                                 </div>
                                                             )}
-                                                            <div className="text-center text-gray-400 text-xs mt-2 italic">
-                                                                AI 生成配图
-                                                            </div>
                                                         </div>
                                                     );
                                                 }
                                             })}
-                                            
-                                            <div className="mt-8 pt-8 border-t border-gray-100 text-center text-gray-400 text-xs">
-                                                - End -
-                                            </div>
+                                            <div className="mt-8 pt-8 border-t border-gray-100 text-center text-gray-400 text-xs">- End -</div>
                                         </div>
                                     </>
                                 ) : (
                                     <div className="h-full flex flex-col items-center justify-center text-gray-300 space-y-4">
-                                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-2">
-                                            <Icons.Settings />
-                                        </div>
+                                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-2"><Icons.Settings /></div>
                                         <p>等待内容生成...</p>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        {/* Floating Action Bar */}
+                        {/* Actions */}
                         {article && !loading && (
                             <div className="absolute bottom-8 right-12 flex flex-col gap-4">
-                                <button 
-                                    onClick={copyToWeChat}
-                                    className="w-14 h-14 bg-white rounded-full shadow-xl flex items-center justify-center text-green-600 hover:scale-110 transition-transform tooltip-container group border border-gray-100"
-                                    title="复制到微信后台"
-                                >
+                                <button onClick={copyToWeChat} className="w-14 h-14 bg-white rounded-full shadow-xl flex items-center justify-center text-green-600 hover:scale-110 transition-transform group border border-gray-100" title="复制到微信">
                                     <Icons.Copy />
-                                    <span className="absolute right-16 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                                        复制富文本
-                                    </span>
                                 </button>
-                                <button 
-                                    onClick={exportLongImage}
-                                    className="w-14 h-14 bg-white rounded-full shadow-xl flex items-center justify-center text-blue-600 hover:scale-110 transition-transform tooltip-container group border border-gray-100"
-                                    title="导出长图"
-                                >
+                                <button onClick={exportLongImage} className="w-14 h-14 bg-white rounded-full shadow-xl flex items-center justify-center text-blue-600 hover:scale-110 transition-transform group border border-gray-100" title="导出长图">
                                     <Icons.Image />
-                                    <span className="absolute right-16 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                                        保存长图
-                                    </span>
                                 </button>
                             </div>
                         )}
